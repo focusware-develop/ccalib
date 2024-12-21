@@ -29,10 +29,10 @@ namespace ccalib {
         if (img.channels() == 3)
             cv::cvtColor(img, img, cv::COLOR_RGB2GRAY);
         if (cv::findChessboardCorners(img, cv::Size(checkerboardCols - 1, checkerboardRows - 1), corners,
-                                      CV_CALIB_CB_ADAPTIVE_THRESH | CV_CALIB_CB_NORMALIZE_IMAGE |
-                                      CV_CALIB_CB_FAST_CHECK))
+                                      cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_NORMALIZE_IMAGE |
+                                      cv::CALIB_CB_FAST_CHECK))
             cv::cornerSubPix(img, corners, cv::Size(11, 11), cv::Size(-1, -1),
-                             cv::TermCriteria(CV_TERMCRIT_EPS | CV_TERMCRIT_ITER, 30, 0.1));
+                             cv::TermCriteria(cv::TermCriteria::EPS | cv::TermCriteria::MAX_ITER, 30, 0.1));
         cv::cvtColor(img, img, cv::COLOR_GRAY2RGB);
         return corners.size() == (checkerboardRows - 1) * (checkerboardCols - 1);
     }
@@ -63,7 +63,7 @@ namespace ccalib {
 
         for (i = 0; i < (int) objectPoints.size(); ++i) {
             projectPoints(cv::Mat(objectPoints[i]), params.R[i], params.T[i], params.K, params.D, imagePoints2);
-            err = norm(cv::Mat(imagePoints[i]), cv::Mat(imagePoints2), CV_L2); // difference
+            err = norm(cv::Mat(imagePoints[i]), cv::Mat(imagePoints2), cv::NORM_L2); // difference
 
             auto n = (int) objectPoints[i].size();
             perViewErrors[i] = std::sqrt(err * err / n); // save for this view
@@ -102,7 +102,7 @@ namespace ccalib {
 
         cv::calibrateCamera(objPoints, imgPoints, cv::Size(camera_width, camera_height),
                             params.K, params.D, params.R, params.T,
-                            CV_CALIB_FIX_ASPECT_RATIO | CV_CALIB_FIX_K4 | CV_CALIB_FIX_K5);
+                            cv::CALIB_FIX_ASPECT_RATIO | cv::CALIB_FIX_K4 | cv::CALIB_FIX_K5);
 
         params.reprojErr = computeReprojectionErrors(objPoints, imgPoints, params, errs);
         params.reprojErrVar = stddev(errs);

@@ -81,20 +81,20 @@ namespace ccalib {
     void Camera::updateParameters() {
         if (isOpened() && !streamOn) {
             // Set new params
-            camera.set(CV_CAP_PROP_FOURCC, fourcc(params.format.c_str()));
-            camera.set(CV_CAP_PROP_FPS, params.fps);
-            camera.set(CV_CAP_PROP_FRAME_WIDTH, params.width);
-            camera.set(CV_CAP_PROP_FRAME_HEIGHT, params.height);
-            camera.set(CV_CAP_PROP_AUTO_EXPOSURE, params.autoExposure ? 0.75 : 0.25);
-            camera.set(CV_CAP_PROP_EXPOSURE, params.exposure);
+            camera.set(cv::CAP_PROP_FOURCC, fourcc(params.format.c_str()));
+            camera.set(cv::CAP_PROP_FPS, params.fps);
+            camera.set(cv::CAP_PROP_FRAME_WIDTH, params.width);
+            camera.set(cv::CAP_PROP_FRAME_HEIGHT, params.height);
+            camera.set(cv::CAP_PROP_AUTO_EXPOSURE, params.autoExposure ? 0.75 : 0.25);
+            camera.set(cv::CAP_PROP_EXPOSURE, params.exposure);
 
             // Update with actual settings
-            auto fourcc = static_cast<uint32_t>(camera.get(CV_CAP_PROP_FOURCC));
+            auto fourcc = static_cast<uint32_t>(camera.get(cv::CAP_PROP_FOURCC));
             params.format = cv::format("%c%c%c%c", fourcc & 255, (fourcc >> 8) & 255, (fourcc >> 16) & 255, (fourcc >> 24) & 255);
-            params.fps = (int) camera.get(CV_CAP_PROP_FPS);
-            params.width = (int) camera.get(CV_CAP_PROP_FRAME_WIDTH);
-            params.height = (int) camera.get(CV_CAP_PROP_FRAME_HEIGHT);
-            params.exposure = (float) camera.get(CV_CAP_PROP_EXPOSURE);
+            params.fps = (int) camera.get(cv::CAP_PROP_FPS);
+            params.width = (int) camera.get(cv::CAP_PROP_FRAME_WIDTH);
+            params.height = (int) camera.get(cv::CAP_PROP_FRAME_HEIGHT);
+            params.exposure = (float) camera.get(cv::CAP_PROP_EXPOSURE);
             params.ratio = (float) params.width / params.height;
         } else if (isOpened()) {
             stopStream();
@@ -119,7 +119,7 @@ namespace ccalib {
 
     void Camera::updateExposure(const float &exposure) {
         params.exposure = exposure;
-        camera.set(CV_CAP_PROP_EXPOSURE, params.exposure);
+        camera.set(cv::CAP_PROP_EXPOSURE, params.exposure);
     }
 
     void Camera::updateFormat(const string &format) {
